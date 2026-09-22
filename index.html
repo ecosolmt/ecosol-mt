@@ -879,6 +879,8 @@ button.ptag:hover{border-color:var(--amz);color:var(--amz)}
 .join button.btn-join{border:0;cursor:pointer;font:inherit;font-weight:700;min-height:44px}
 .join a.btn-join.alt,.join button.btn-join.alt{background:transparent;color:#f2f5ef;border:1px solid rgba(255,255,255,.35);padding:.8rem 1.3rem;border-radius:var(--r-full)}
 .join a.btn-join.alt:hover,.join button.btn-join.alt:hover{background:rgba(255,255,255,.1)}
+.join .btn-join[hidden]{display:none}
+.join-thanks{margin:0;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);border-radius:12px;padding:.9rem 1.1rem;color:#fff;font-weight:600;line-height:1.45;max-width:36rem}
 .copy-mail{border:0;background:transparent;color:#f2f5ef;text-decoration:underline;font:inherit;font-weight:600;padding:.4rem .1rem;cursor:pointer}
 .mail-dlg{margin:auto;border:0;padding:0;border-radius:var(--r-lg);background:var(--surface);color:var(--text);width:min(420px,calc(100vw - 32px));box-shadow:0 20px 50px rgba(0,0,0,.3)}
 .mail-dlg::backdrop{background:rgba(10,20,14,.55)}
@@ -1015,7 +1017,8 @@ footer .wrap{padding-block:22px 40px;font-size:.78rem;color:var(--faint);display
     <div class="join-actions">
       <a class="btn-join" id="pautaBtn" href="#">Enviar pauta por e-mail</a>
       <a class="btn-join alt" id="comentBtn" href="#">Enviar comentário ou correção</a>
-      <span class="mail">Não abriu? <button type="button" class="copy-mail" id="copyMail">Copiar endereço</button> <span id="pautaMail"></span></span>
+      <p class="join-thanks" id="joinThanks" role="status" hidden>Obrigado por contribuir com o crescimento de nossa página! Sua mensagem será analisada pela nossa equipe.</p>
+      <span class="mail"><span id="mailQ">Não abriu?</span> <button type="button" class="copy-mail" id="copyMail">Copiar endereço</button> <span id="pautaMail"></span></span>
     </div>
   </div>
 </section>
@@ -1322,6 +1325,8 @@ function renderTemas(){
   const bodyC='Notícia ou registro a que se refere:\nComentário ou correção:\nNome e instituição:\n';
   $('pautaBtn').href='mailto:'+to+'?subject='+E('[Pauta Ecosol MT] ')+'&body='+E(body);
   $('comentBtn').href='mailto:'+to+'?subject='+E('[Comentário Ecosol MT] ')+'&body='+E(bodyC);
+  const thanks=()=>setTimeout(()=>{ $('pautaBtn').hidden=true; $('comentBtn').hidden=true; $('joinThanks').hidden=false; $('mailQ').textContent='O e-mail não abriu?'; },400);
+  $('pautaBtn').addEventListener('click',thanks); $('comentBtn').addEventListener('click',thanks);
   $('copyMail').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(to); toast('Endereço copiado: '+to); }catch(e){ window.prompt('Copie o endereço:', to); } });
   $('pautaMail').textContent=to;
   renderTemas(); MapUI.init(); renderWeekSelect(); renderNumbers(); renderArchive(); renderCarousel();
