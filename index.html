@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Destaques semanais, mapa e números da Economia Popular e Solidária em Mato Grosso.">
+</head>
+<body>
 <title>Ecosol Mato Grosso</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -868,6 +876,24 @@ button.ptag:hover{border-color:var(--amz);color:var(--amz)}
 .join .btn-join{background:#f2f5ef;color:#153f2a;border-radius:var(--r-full);padding:.8rem 1.3rem;font-weight:700;text-decoration:none}
 .join .btn-join:hover{background:#fff}
 .join a.sec{color:#e7efe8;font-weight:600;font-size:.9rem}
+.join button.btn-join{border:0;cursor:pointer;font:inherit;font-weight:700;min-height:44px}
+.join a.btn-join.alt,.join button.btn-join.alt{background:transparent;color:#f2f5ef;border:1px solid rgba(255,255,255,.35);padding:.8rem 1.3rem;border-radius:var(--r-full)}
+.join a.btn-join.alt:hover,.join button.btn-join.alt:hover{background:rgba(255,255,255,.1)}
+.copy-mail{border:0;background:transparent;color:#f2f5ef;text-decoration:underline;font:inherit;font-weight:600;padding:.4rem .1rem;cursor:pointer}
+.mail-dlg{margin:auto;border:0;padding:0;border-radius:var(--r-lg);background:var(--surface);color:var(--text);width:min(420px,calc(100vw - 32px));box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.mail-dlg::backdrop{background:rgba(10,20,14,.55)}
+.mail-box{padding:20px;display:flex;flex-direction:column;gap:.75rem}
+.mail-head{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.mail-head h3{font-size:1.2rem}
+.mail-x{border:0;background:var(--surface-2);color:var(--text);width:36px;height:36px;border-radius:50%;font-size:1.3rem;line-height:1}
+.mail-sub{font-size:.85rem;color:var(--muted)}
+.mail-opts{display:flex;flex-direction:column;gap:.5rem}
+.mail-opt{display:flex;flex-direction:column;align-items:flex-start;gap:.1rem;padding:.8rem 1rem;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface-2);color:var(--text);text-decoration:none;font:inherit;text-align:left;min-height:48px;cursor:pointer}
+.mail-opt:hover{border-color:var(--amz)}
+.mail-opt b{font-size:.95rem}
+.mail-opt span{font-size:.76rem;color:var(--muted)}
+.mail-opt.pref{border-color:var(--amz);box-shadow:inset 0 0 0 1px var(--amz)}
+.mail-opt.pref b::after{content:"  · última escolha";font-weight:500;font-size:.72rem;color:var(--amz)}
 .join .mail{font-size:.82rem;color:#b7cdbc}
 
 details.temas{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 20px}
@@ -988,8 +1014,8 @@ footer .wrap{padding-block:22px 40px;font-size:.78rem;color:var(--faint);display
     </div>
     <div class="join-actions">
       <a class="btn-join" id="pautaBtn" href="#">Enviar pauta por e-mail</a>
-      <a class="sec" id="comentBtn" href="#">Enviar comentário ou correção</a>
-      <span class="mail" id="pautaMail"></span>
+      <a class="btn-join alt" id="comentBtn" href="#">Enviar comentário ou correção</a>
+      <span class="mail">Não abriu? <button type="button" class="copy-mail" id="copyMail">Copiar endereço</button> <span id="pautaMail"></span></span>
     </div>
   </div>
 </section>
@@ -1292,9 +1318,15 @@ function renderTemas(){
   $('updText').textContent = S.meta.ultima_execucao ? 'Atualizado em '+fmtDate(S.meta.ultima_execucao)+' · próxima: sexta-feira' : 'Atualização semanal';
   const to = S.pub.email_pautas || 'ecosol.mt@trabalho.gov.br';
   const body = 'Nome:\nInstituição / organização:\nMunicípio(s) de MT:\nTítulo da pauta:\nLink ou fonte (se houver):\nDescrição do fato (o quê, quando, onde, quem):\nContato para checagem:\n';
-  $('pautaBtn').href='mailto:'+to+'?subject='+encodeURIComponent('[Pauta Ecosol MT] ')+'&body='+encodeURIComponent(body);
-  $('comentBtn').href='mailto:'+to+'?subject='+encodeURIComponent('[Comentário Ecosol MT] ')+'&body='+encodeURIComponent('Notícia ou registro a que se refere:\nComentário ou correção:\nNome e instituição:\n');
+  const E=encodeURIComponent;
+  const bodyC='Notícia ou registro a que se refere:\nComentário ou correção:\nNome e instituição:\n';
+  $('pautaBtn').href='mailto:'+to+'?subject='+E('[Pauta Ecosol MT] ')+'&body='+E(body);
+  $('comentBtn').href='mailto:'+to+'?subject='+E('[Comentário Ecosol MT] ')+'&body='+E(bodyC);
+  $('copyMail').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(to); toast('Endereço copiado: '+to); }catch(e){ window.prompt('Copie o endereço:', to); } });
   $('pautaMail').textContent=to;
   renderTemas(); MapUI.init(); renderWeekSelect(); renderNumbers(); renderArchive(); renderCarousel();
 })();
 </script>
+
+</body>
+</html>
